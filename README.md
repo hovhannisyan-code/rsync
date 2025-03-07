@@ -20,4 +20,4 @@ rsync -a --delete --checksum --exclude ".*" ~/ /tmp/backup/
 - На проверку направить файл crontab и скриншот с результатом работы утилиты.
 
 [Playbook](https://github.com/hovhannisyan-code/rsync/blob/master/playbook.yml)
-![Result](https://github.com/hovhannisyan-code/rsync/blob/master/screenshot_0.yml)
+![Result](https://github.com/hovhannisyan-code/rsync/blob/master/screenshot_0.png)
