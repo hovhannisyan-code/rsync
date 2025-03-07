@@ -1,0 +1,35 @@
+---
+- name: Setup Backup Task with rsync and cron
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install rsync
+      apt:
+        name: rsync
+        state: present
+        update_cache: yes
+
+    - name: Create backup script
+      copy:
+        dest: /usr/local/bin/backup.sh
+        content: |
+          #!/bin/bash
+          LOG_FILE="/var/log/rsync_backup.log"
+          BACKUP_DIR="/tmp/backup"
+
+          rsync -a --delete --checksum --exclude ".*" /home/vagrant/ $BACKUP_DIR/ > $LOG_FILE 2>&1
+
+          if [ $? -eq 0 ]; then
+              echo "$(date) - Backup completed successfully." >> $LOG_FILE
+          else
+              echo "$(date) - Backup failed!" >> $LOG_FILE
+          fi
+        mode: "0755"
+
+    - name: Setup cron job for backup
+      cron:
+        name: "Daily backup of home directory"
+        minute: "0"
+        hour: "3"
+        job: "/usr/local/bin/backup.sh"
